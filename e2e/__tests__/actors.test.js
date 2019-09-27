@@ -1,14 +1,15 @@
 const request = require('../request');
 const db = require('../db');
 
-describe('studios', () => {
+describe('actors', () => {
   beforeEach(() => {
     return db.dropCollection('actors');
   });
 
   const john = {
-    name: 'John Travolta',
-    birthYear: 1953
+    name: 'Jhonny Depp',
+    dob: 'March 23rd 1957',
+    pob: 'Pittsburg, PA'
   };
 
   function postActor(john) {
@@ -32,8 +33,13 @@ describe('studios', () => {
   it('gets an actor by id', () => {
     return postActor(john).then(actor => {
       return request
-        .post('/api/actors')
-        .send(john)
+        .post('/api/films')
+        .send({
+          title: 'Alladin',
+          studio: 'mgm',
+          released: 1977,
+          cast: [{ role: 'champ', actor: actor._id }]
+        })
         .expect(200)
         .then(() => {
           return request.get(`/api/actors/${actor._id}`).expect(200);
@@ -41,17 +47,14 @@ describe('studios', () => {
         .then(({ body }) => {
           expect(body).toMatchInlineSnapshot(
             {
-              _id: expect.any(String)
+              _id: expect.any(String),
+              films: [
+                {
+                  _id: expect.any(String)
+                }
+              ]
             },
 
-            `
-            Object {
-              "__v": 0,
-              "_id": Any<String>,
-              "birthYear": 1953,
-              "name": "John Travolta",
-            }
-          `
           );
         });
     });
