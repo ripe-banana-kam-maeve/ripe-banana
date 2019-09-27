@@ -61,7 +61,6 @@ describe.only('films api', () => {
 
   it('posts a film', () => {
     return postFilm(toyStory).then(film => {
-      console.log(film);
       expect(film).toMatchInlineSnapshot(
         {
           _id: expect.any(String),
@@ -84,6 +83,73 @@ describe.only('films api', () => {
         }
       `
       );
+    });
+  });
+
+  it('gets a film by id', () => {
+    return postFilm(toyStory).then(film => {
+      return request
+        .get(`/api/films/${film._id}`)
+        .expect(200)
+        .then(({ body }) => {
+          expect(body).toMatchInlineSnapshot(
+            {
+              _id: expect.any(String),
+              actors: [expect.any(String)],
+              studio: expect.any(String)
+            },
+            `
+            Object {
+              "__v": 0,
+              "_id": Any<String>,
+              "actors": Array [
+                Any<String>,
+              ],
+              "digital": false,
+              "director": "tom hanks",
+              "studio": Any<String>,
+              "title": "toy story",
+              "yearPub": 1991,
+            }
+          `
+          );
+        });
+    });
+  });
+
+  it('get all films', () => {
+    return postFilm(toyStory).then(() => {
+      return request
+        .post('/api/films')
+        .send(toyStory)
+        .expect(200)
+        .then(() => {
+          return request.get('/api/films').expect(200);
+        })
+        .then(({ body }) => {
+          expect(body[0]).toMatchInlineSnapshot(
+            {
+              _id: expect.any(String),
+              actors: [expect.any(String)],
+              studio: expect.any(String)
+            },
+
+            `
+            Object {
+              "__v": 0,
+              "_id": Any<String>,
+              "actors": Array [
+                Any<String>,
+              ],
+              "digital": false,
+              "director": "tom hanks",
+              "studio": Any<String>,
+              "title": "toy story",
+              "yearPub": 1991,
+            }
+          `
+          );
+        });
     });
   });
 });
