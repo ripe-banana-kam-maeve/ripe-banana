@@ -8,9 +8,13 @@ describe('studios', () => {
 
   const disney = {
     name: 'pixar',
-    yearFounded: 1930,
-    alive: false
+    address: {
+      city: 'beaverton',
+      state: 'OR',
+      country: 'USA'
+    }
   };
+  
 
   function postStudio(disney) {
     return request
@@ -33,8 +37,13 @@ describe('studios', () => {
   it('gets an studio by id', () => {
     return postStudio(disney).then(studio => {
       return request
-        .post('/api/studios')
-        .send(disney)
+        .post('/api/films')
+        .send({
+          title: 'Alladin',
+          studio: studio._id,
+          released: 1977,
+          cast: [{ role: 'champ', actor: 'kljl' }]
+        })
         .expect(200)
         .then(() => {
           return request.get(`/api/studios/${studio._id}`).expect(200);
@@ -45,15 +54,7 @@ describe('studios', () => {
               _id: expect.any(String)
             },
 
-            `
-            Object {
-              "__v": 0,
-              "_id": Any<String>,
-              "alive": false,
-              "name": "pixar",
-              "yearFounded": 1930,
-            }
-          `
+
           );
         });
     });

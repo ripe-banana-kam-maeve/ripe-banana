@@ -1,5 +1,6 @@
 const request = require('../request');
 const db = require('../db');
+const mongoose = require('mongoose');
 
 describe('actors', () => {
   beforeEach(() => {
@@ -36,7 +37,7 @@ describe('actors', () => {
         .post('/api/films')
         .send({
           title: 'Alladin',
-          studio: 'mgm',
+          studio: mongoose.types.ObjectId,
           released: 1977,
           cast: [{ role: 'champ', actor: actor._id }]
         })

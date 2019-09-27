@@ -6,10 +6,8 @@ describe('reviewer api', () => {
     return db.dropCollection('reviewers');
   });
   const fakeGuy = {
-    name: 'bob',
-    publication: 'nytimes',
-    yearsPub: 4,
-    print: true
+    name: 'Dwane the Rock Johnson',
+    company: 'School of Hard Knocks'
   };
 
   function postReviewer(fakeGuy) {
@@ -49,10 +47,8 @@ describe('reviewer api', () => {
             Object {
               "__v": 0,
               "_id": Any<String>,
-              "name": "bob",
-              "print": true,
-              "publication": "nytimes",
-              "yearsPub": 4,
+              "company": "School of Hard Knocks",
+              "name": "Dwane the Rock Johnson",
             }
           `
           );
@@ -79,10 +75,8 @@ describe('reviewer api', () => {
             Object {
               "__v": 0,
               "_id": Any<String>,
-              "name": "bob",
-              "print": true,
-              "publication": "nytimes",
-              "yearsPub": 4,
+              "company": "School of Hard Knocks",
+              "name": "Dwane the Rock Johnson",
             }
           `
           );
@@ -93,14 +87,14 @@ describe('reviewer api', () => {
   it('updates a reviewer', () => {
     return postReviewer(fakeGuy)
       .then(reviewer => {
-        reviewer.publication = 'fakestuff';
+        reviewer.company = 'fakestuff';
         return request
           .put(`/api/reviewers/${reviewer._id}`)
           .send(reviewer)
           .expect(200);
       })
       .then(({ body }) => {
-        expect(body.publication).toBe('fakestuff');
+        expect(body.company).toBe('fakestuff');
       });
   });
 });
