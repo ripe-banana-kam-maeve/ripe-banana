@@ -10,8 +10,6 @@ describe.only('films api', () => {
     ]);
   });
 
-
-
   const tom = {
     name: 'Tom Hanks',
     birthYear: 1953
@@ -31,7 +29,6 @@ describe.only('films api', () => {
     alive: true
   };
 
-
   function postStudio(disney) {
     return request
       .post('/api/studios')
@@ -46,14 +43,11 @@ describe.only('films api', () => {
     yearPub: 1991,
     digital: false,
     actors: [],
-    studio: {},
+    studio: {}
   };
 
   function postFilm(film) {
-    return Promise.all([
-      postActor(tom),
-      postStudio(disney)
-    ])
+    return Promise.all([postActor(tom), postStudio(disney)])
       .then(([actor, studio]) => {
         film.actors[0] = actor._id;
         film.studio = studio._id;
@@ -67,14 +61,29 @@ describe.only('films api', () => {
 
   it('posts a film', () => {
     return postFilm(toyStory).then(film => {
+      console.log(film);
       expect(film).toMatchInlineSnapshot(
         {
           _id: expect.any(String),
-          actor: [expect.any(String)],
+          actors: [expect.any(String)],
           studio: expect.any(String)
         },
+
+        `
+        Object {
+          "__v": 0,
+          "_id": Any<String>,
+          "actors": Array [
+            Any<String>,
+          ],
+          "digital": false,
+          "director": "tom hanks",
+          "studio": Any<String>,
+          "title": "toy story",
+          "yearPub": 1991,
+        }
+      `
       );
     });
   });
-
 });
