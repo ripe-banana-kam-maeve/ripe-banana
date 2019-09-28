@@ -36,7 +36,9 @@ describe('studios', () => {
 
   it('gets an studio by id', () => {
     return postStudio(disney).then(studio => {
-      return request
+      return Promise.all([
+        
+      ])
         .post('/api/films')
         .send({
           title: 'Alladin',

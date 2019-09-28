@@ -11,8 +11,9 @@ describe.only('films api', () => {
   });
 
   const tom = {
-    name: 'Tom Hanks',
-    birthYear: 1953
+    name: 'Tommy Depp',
+    dob: 'March 23rd 1957',
+    pob: 'Pittsburg, PA'
   };
 
   function postActor(tom) {
@@ -24,9 +25,12 @@ describe.only('films api', () => {
   }
 
   const disney = {
-    name: 'Pixar',
-    yearFounded: 1925,
-    alive: true
+    name: 'MGM',
+    address: {
+      city: 'beaverton',
+      state: 'OR',
+      country: 'USA'
+    }
   };
 
   function postStudio(disney) {
@@ -38,19 +42,18 @@ describe.only('films api', () => {
   }
 
   const toyStory = {
-    title: 'toy story',
-    director: 'tom hanks',
-    yearPub: 1991,
-    digital: false,
-    actors: [],
-    studio: {}
+    title: 'Alladin',
+    studio: { _id: expect.any(String), name: expect.any(String) },
+    released: 1977,
+    cast: [{ _id: expect.any(String), role: 'champ', actor: expect.any(Object) }]
   };
 
   function postFilm(film) {
     return Promise.all([postActor(tom), postStudio(disney)])
       .then(([actor, studio]) => {
-        film.actors[0] = actor._id;
-        film.studio = studio._id;
+        console.log(actor, studio);
+        film.cast[0] = { _id: actor._id, role: actor.role, actor: { _id: actor._id, name: actor.name } };
+        film.studio = { _id: studio._id, name: studio.name };
         return request
           .post('/api/films')
           .send(toyStory)
@@ -59,29 +62,16 @@ describe.only('films api', () => {
       .then(({ body }) => body);
   }
 
-  it('posts a film', () => {
+  it.only('posts a film', () => {
     return postFilm(toyStory).then(film => {
       expect(film).toMatchInlineSnapshot(
         {
           _id: expect.any(String),
-          actors: [expect.any(String)],
-          studio: expect.any(String)
+          cast: [{ actor: { _id: expect.any(String) } }],
+          studio: { _id: expect.any(String) }
         },
 
-        `
-        Object {
-          "__v": 0,
-          "_id": Any<String>,
-          "actors": Array [
-            Any<String>,
-          ],
-          "digital": false,
-          "director": "tom hanks",
-          "studio": Any<String>,
-          "title": "toy story",
-          "yearPub": 1991,
-        }
-      `
+       
       );
     });
   });
@@ -98,20 +88,7 @@ describe.only('films api', () => {
               actors: [expect.any(String)],
               studio: expect.any(String)
             },
-            `
-            Object {
-              "__v": 0,
-              "_id": Any<String>,
-              "actors": Array [
-                Any<String>,
-              ],
-              "digital": false,
-              "director": "tom hanks",
-              "studio": Any<String>,
-              "title": "toy story",
-              "yearPub": 1991,
-            }
-          `
+           
           );
         });
     });
@@ -134,20 +111,7 @@ describe.only('films api', () => {
               studio: expect.any(String)
             },
 
-            `
-            Object {
-              "__v": 0,
-              "_id": Any<String>,
-              "actors": Array [
-                Any<String>,
-              ],
-              "digital": false,
-              "director": "tom hanks",
-              "studio": Any<String>,
-              "title": "toy story",
-              "yearPub": 1991,
-            }
-          `
+            
           );
         });
     });
