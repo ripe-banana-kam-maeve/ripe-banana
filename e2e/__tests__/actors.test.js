@@ -20,7 +20,13 @@ describe('actors', () => {
     title: 'Alladin',
     studio: { _id: expect.any(String), name: expect.any(String) },
     released: 1977,
-    cast: [{ _id: expect.any(String), role: 'champ', actor: { _id: expect.any(String), name: expect.any(String) } }]
+    cast: [
+      {
+        _id: expect.any(String),
+        role: 'champ',
+        actor: { _id: expect.any(String), name: expect.any(String) }
+      }
+    ]
   };
 
   function postActor(john) {
@@ -43,9 +49,10 @@ describe('actors', () => {
 
   it('gets an actor by id', () => {
     return postActor(john).then(actor => {
+      toyStory.cast[0] = actor;
       return postFilm(toyStory)
-        .then(() => {
-          return request.get(`/api/actors/${actor._id}`).expect(200);
+        .then(films => {
+          return request.get(`/api/actors/${films.cast[0].actor}`).expect(200);
         })
         .then(({ body }) => {
           expect(body).toMatchInlineSnapshot(
@@ -58,6 +65,21 @@ describe('actors', () => {
               ]
             },
 
+            `
+            Object {
+              "_id": Any<String>,
+              "dob": "March 23rd 1957",
+              "films": Array [
+                Object {
+                  "_id": Any<String>,
+                  "released": 1977,
+                  "title": "Alladin",
+                },
+              ],
+              "name": "Tommy Depp",
+              "pob": "Pittsburg, PA",
+            }
+          `
           );
         });
     });
@@ -69,7 +91,10 @@ describe('actors', () => {
         return request.get('/api/actors').expect(200);
       })
       .then(({ body }) => {
-        expect(body[0]).toEqual({ _id: expect.any(String), name: 'Jhonny Depp' });
+        expect(body[0]).toEqual({
+          _id: expect.any(String),
+          name: 'Jhonny Depp'
+        });
       });
   });
 });
