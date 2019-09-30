@@ -1,6 +1,5 @@
 const request = require('../request');
 const db = require('../db');
-// const mongoose = require('mongoose');
 const { postFilm } = require('../../e2e/__tests__/films.test');
 
 describe('actors', () => {

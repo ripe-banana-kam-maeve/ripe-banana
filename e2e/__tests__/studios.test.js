@@ -1,5 +1,6 @@
 const request = require('../request');
 const db = require('../db');
+const { postFilm } = require('../__tests__/films.test');
 
 describe('studios', () => {
   beforeEach(() => {
@@ -13,6 +14,13 @@ describe('studios', () => {
       state: 'OR',
       country: 'USA'
     }
+  };
+
+  const toyStory = {
+    title: 'Alladin',
+    studio: { _id: expect.any(String), name: expect.any(String) },
+    released: 1977,
+    cast: [{ _id: expect.any(String), role: 'champ', actor: { _id: expect.any(String), name: expect.any(String) } }]
   };
   
 
@@ -36,25 +44,14 @@ describe('studios', () => {
 
   it('gets an studio by id', () => {
     return postStudio(disney).then(studio => {
-      return Promise.all([
-        
-      ])
-        .post('/api/films')
-        .send({
-          title: 'Alladin',
-          studio: studio._id,
-          released: 1977,
-          cast: [{ role: 'champ', actor: 'kljl' }]
-        })
+      return postFilm(toyStory)
         .expect(200)
         .then(() => {
           return request.get(`/api/studios/${studio._id}`).expect(200);
         })
         .then(({ body }) => {
           expect(body).toMatchInlineSnapshot(
-            {
-              _id: expect.any(String)
-            },
+            console.log(body)
 
 
           );
