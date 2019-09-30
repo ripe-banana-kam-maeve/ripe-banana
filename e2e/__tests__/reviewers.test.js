@@ -1,22 +1,22 @@
 const request = require('../request');
 const db = require('../db');
 
+const fakeGuy = {
+  name: 'Dwane the Rock Johnson',
+  company: 'School of Hard Knocks'
+};
+
+function postReviewer(fakeGuy) {
+  return request
+    .post('/api/reviewers')
+    .send(fakeGuy)
+    .expect(200)
+    .then(({ body }) => body);
+}
 describe('reviewer api', () => {
   beforeEach(() => {
     return db.dropCollection('reviewers');
   });
-  const fakeGuy = {
-    name: 'Dwane the Rock Johnson',
-    company: 'School of Hard Knocks'
-  };
-
-  function postReviewer(fakeGuy) {
-    return request
-      .post('/api/reviewers')
-      .send(fakeGuy)
-      .expect(200)
-      .then(({ body }) => body);
-  }
 
   it('posts an reviewer', () => {
     return postReviewer(fakeGuy).then(reviewer => {
@@ -98,3 +98,5 @@ describe('reviewer api', () => {
       });
   });
 });
+
+module.exports = { postReviewer };

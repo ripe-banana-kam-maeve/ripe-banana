@@ -13,7 +13,8 @@ describe('actors', () => {
   const john = {
     name: 'Jhonny Depp',
     dob: 'March 23rd 1957',
-    pob: 'Pittsburg, PA'
+    pob: 'Pittsburg, PA',
+    films: []
   };
 
   const toyStory = {

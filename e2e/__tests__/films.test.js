@@ -52,7 +52,7 @@ function postStudio(disney) {
     .then(({ body }) => body);
 }
 
-describe.skip('films api', () => {
+describe('films api', () => {
   beforeEach(() => {
     return Promise.all([
       db.dropCollection('films'),
