@@ -98,4 +98,11 @@ describe('actors', () => {
         });
       });
   });
+  it('deletes an actor when that actor is not in a movie', () => {
+    return postActor(john)
+      .then(actor => {
+        return request.delete(`/api/actors/${actor._id}`)
+          .expect(200);
+      });
+  });
 });
