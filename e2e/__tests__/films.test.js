@@ -45,34 +45,35 @@ describe.only('films api', () => {
     title: 'Alladin',
     studio: { _id: expect.any(String), name: expect.any(String) },
     released: 1977,
-    cast: [{ _id: expect.any(String), role: 'champ', actor: expect.any(Object) }]
+    cast: [{ _id: expect.any(String), role: 'champ', actor: { _id: expect.any(String), name: expect.any(String) } }]
   };
 
   function postFilm(film) {
     return Promise.all([postActor(tom), postStudio(disney)])
       .then(([actor, studio]) => {
         console.log(actor, studio);
-        film.cast[0] = { _id: actor._id, role: actor.role, actor: { _id: actor._id, name: actor.name } };
-        film.studio = { _id: studio._id, name: studio.name };
+        film.cast[0] = {
+          role: 'champ',
+          actor: actor._id,
+        };
+        film.studio =
+          studio._id
+        ;
+        console.log('film', film);
         return request
           .post('/api/films')
-          .send(toyStory)
+          .send(film)
           .expect(200);
       })
-      .then(({ body }) => body);
+      .then(({ body }) => {
+        console.log('body', body);
+        return body;
+      });
   }
 
   it.only('posts a film', () => {
     return postFilm(toyStory).then(film => {
-      expect(film).toMatchInlineSnapshot(
-        {
-          _id: expect.any(String),
-          cast: [{ actor: { _id: expect.any(String) } }],
-          studio: { _id: expect.any(String) }
-        },
-
-       
-      );
+      expect(film).toEqual({ __v: 0, _id: expect.any(String), 'title': 'Alladin', 'studio':  expect.any(String), 'released': 1977, 'cast': [{ '_id': expect.any(String), 'role': 'champ', 'actor': expect.any(String) }] });
     });
   });
 
@@ -88,7 +89,7 @@ describe.only('films api', () => {
               actors: [expect.any(String)],
               studio: expect.any(String)
             },
-           
+
           );
         });
     });
@@ -111,7 +112,7 @@ describe.only('films api', () => {
               studio: expect.any(String)
             },
 
-            
+
           );
         });
     });
