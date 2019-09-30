@@ -1,7 +1,7 @@
 const request = require('../request');
 const db = require('../db');
 
-describe.only('films api', () => {
+describe.skip('films api', () => {
   beforeEach(() => {
     return Promise.all([
       db.dropCollection('films'),
