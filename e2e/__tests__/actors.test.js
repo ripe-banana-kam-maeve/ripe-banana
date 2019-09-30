@@ -1,6 +1,7 @@
 const request = require('../request');
 const db = require('../db');
-const mongoose = require('mongoose');
+// const mongoose = require('mongoose');
+const { postFilm } = require('../../e2e/__tests__/films.test');
 
 describe('actors', () => {
   beforeEach(() => {
@@ -11,6 +12,13 @@ describe('actors', () => {
     name: 'Jhonny Depp',
     dob: 'March 23rd 1957',
     pob: 'Pittsburg, PA'
+  };
+
+  const toyStory = {
+    title: 'Alladin',
+    studio: { _id: expect.any(String), name: expect.any(String) },
+    released: 1977,
+    cast: [{ _id: expect.any(String), role: 'champ', actor: { _id: expect.any(String), name: expect.any(String) } }]
   };
 
   function postActor(john) {
@@ -33,14 +41,7 @@ describe('actors', () => {
 
   it('gets an actor by id', () => {
     return postActor(john).then(actor => {
-      return request
-        .post('/api/films')
-        .send({
-          title: 'Alladin',
-          studio: mongoose.types.ObjectId,
-          released: 1977,
-          cast: [{ role: 'champ', actor: actor._id }]
-        })
+      return postFilm(toyStory)
         .expect(200)
         .then(() => {
           return request.get(`/api/actors/${actor._id}`).expect(200);
@@ -59,5 +60,15 @@ describe('actors', () => {
           );
         });
     });
+  });
+
+  it('gets all actors', () => {
+    return postActor(john)
+      .then(() => {
+        return request.get('/api/actors').expect(200);
+      })
+      .then(({ body }) => {
+        expect(body).toEqual({ _id: expect.any(String), name: 'john' });
+      });
   });
 });

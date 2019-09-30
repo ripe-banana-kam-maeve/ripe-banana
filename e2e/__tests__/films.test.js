@@ -51,7 +51,6 @@ describe.only('films api', () => {
   function postFilm(film) {
     return Promise.all([postActor(tom), postStudio(disney)])
       .then(([actor, studio]) => {
-        console.log(actor, studio);
         film.cast[0] = {
           role: 'champ',
           actor: actor._id,
@@ -59,14 +58,12 @@ describe.only('films api', () => {
         film.studio =
           studio._id
         ;
-        console.log('film', film);
         return request
           .post('/api/films')
           .send(film)
           .expect(200);
       })
       .then(({ body }) => {
-        console.log('body', body);
         return body;
       });
   }
@@ -77,7 +74,7 @@ describe.only('films api', () => {
     });
   });
 
-  it.only('gets a film by id', () => {
+  it('gets a film by id', () => {
     return postFilm(toyStory).then(film => {
       return request
         .get(`/api/films/${film._id}`)
@@ -85,8 +82,8 @@ describe.only('films api', () => {
         .then(({ body }) => {
           expect(body).toEqual(
             { 
-              __v: 
-              0, _id: expect.any(String), 
+              __v: 0, 
+              _id: expect.any(String), 
               'title': 'Alladin', 
               'studio':  {
                 _id: expect.any(String),
@@ -100,10 +97,8 @@ describe.only('films api', () => {
                   _id: expect.any(String), 
                   name: expect.any(String) 
                 } 
-              }] });
-            
-
-  
+              }] 
+            });
         });
     });
   });
@@ -118,14 +113,17 @@ describe.only('films api', () => {
           return request.get('/api/films').expect(200);
         })
         .then(({ body }) => {
-          expect(body[0]).toMatchInlineSnapshot(
+          expect(body[0]).toEqual(
             {
-              _id: expect.any(String),
-              actors: [expect.any(String)],
-              studio: expect.any(String)
+              __v: 0, 
+              _id: expect.any(String), 
+              'title': 'Alladin', 
+              'studio':  {
+                _id: expect.any(String),
+                name: expect.any(String)
+              },
+              'released': 1977, 
             },
-
-
           );
         });
     });
