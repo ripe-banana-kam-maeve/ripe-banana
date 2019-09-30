@@ -41,7 +41,7 @@ describe('actors', () => {
     });
   });
 
-  it.only('gets an actor by id', () => {
+  it('gets an actor by id', () => {
     return postActor(john).then(actor => {
       return postFilm(toyStory)
         .then(() => {
@@ -69,7 +69,7 @@ describe('actors', () => {
         return request.get('/api/actors').expect(200);
       })
       .then(({ body }) => {
-        expect(body).toEqual({ _id: expect.any(String), name: 'john' });
+        expect(body[0]).toEqual({ _id: expect.any(String), name: 'Jhonny Depp' });
       });
   });
 });
