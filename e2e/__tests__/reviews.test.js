@@ -54,9 +54,7 @@ describe('reviews', () => {
   };
 
   function postReview(testReview1) {
-    return Promise.all([
-      postReviewer(fakeGuy), postFilm(toyStory)
-    ])
+    return Promise.all([postReviewer(fakeGuy), postFilm(toyStory)])
       .then(([reviewer, film]) => {
         testReview1.film = film;
         testReview1.reviewer = reviewer;
@@ -71,9 +69,14 @@ describe('reviews', () => {
   }
   it('posts an review', () => {
     return postReview(testReview1).then(review => {
-      expect(review).toEqual(
-        { '__v': 0, '_id': expect.any(String), 'film': expect.any(String), 'rating': 4, 'review': 'was bad', 'reviewer': expect.any(String) }
-      );
+      expect(review).toEqual({
+        __v: 0,
+        _id: expect.any(String),
+        film: expect.any(String),
+        rating: 4,
+        review: 'was bad',
+        reviewer: expect.any(String)
+      });
     });
   });
   it('gets reviews', () => {
@@ -83,21 +86,11 @@ describe('reviews', () => {
       postReview(testReview3),
       postReview(testReview4)
     ])
-      .then(([r1, r2, r3, r4]) => {
-        return request
-          .post(`/api/reviews`).send(r1).expect(200)
-          .post(`/api/reviews`).send(r2).expect(200)
-          .post(`/api/reviews`).send(r3).expect(200)
-          .post(`/api/reviews`).send(r4).expect(200);
+      .then(() => {
+        return request.get(`/api/reviews`).expect(200);
       })
       .then(({ body }) => {
-        console.log('body', body);
-        expect(body[0]).toMatchInlineSnapshot(
-          {
-            _id: expect.any(String)
-          },
-
-        );
+        expect(body.length).toBe(4);
       });
   });
 });

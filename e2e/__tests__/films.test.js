@@ -107,27 +107,32 @@ describe('films api', () => {
 
   it('get all films', () => {
     return postFilm(toyStory).then(() => {
-      return request
-        .post('/api/films')
-        .send(toyStory)
-        .expect(200)
-        .then(() => {
-          return request.get('/api/films').expect(200);
-        })
-        .then(({ body }) => {
-          expect(body[0]).toEqual(
-            {
-              __v: 0,
+      // return request
+      //   .post('/api/films')
+      //   .send(toyStory)
+      //   .expect(200)
+      //   .then(() => {
+      return request.get('/api/films').expect(200);
+    })
+      .then(({ body }) => {
+        expect(body[0]).toEqual(
+          {
+            __v: 0,
+            _id: expect.any(String),
+            'title': 'Alladin',
+            'studio': {
               _id: expect.any(String),
-              'title': 'Alladin',
-              'studio': {
-                _id: expect.any(String),
-                name: expect.any(String)
-              },
-              'released': 1977,
+              name: expect.any(String)
             },
-          );
-        });
+            'released': 1977,
+          },
+        );
+      });
+  });
+
+  it('deletes a film', () => {
+    return postFilm(toyStory).then((film) => {
+      return request.get(`/api/films/${film._id}`).expect(200);
     });
   });
 });
