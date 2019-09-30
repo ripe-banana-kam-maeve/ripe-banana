@@ -132,7 +132,11 @@ describe('films api', () => {
 
   it('deletes a film', () => {
     return postFilm(toyStory).then((film) => {
-      return request.get(`/api/films/${film._id}`).expect(200);
+      return request.get(`/api/films/${film._id}`)
+        .expect(200)
+        .then(res => {
+          expect(res.data).toBeUndefined();
+        });
     });
   });
 });
