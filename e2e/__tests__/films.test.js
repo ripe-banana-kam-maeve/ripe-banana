@@ -20,6 +20,7 @@ function postFilm(film) {
       return body;
     });
 }
+
 const tom = {
   name: 'Tommy Depp',
   dob: 'March 23rd 1957',
@@ -59,12 +60,12 @@ describe.skip('films api', () => {
       db.dropCollection('studios')
     ]);
   });
-  
-  
-  
+
+
+
   it('posts a film', () => {
     return postFilm(toyStory).then(film => {
-      expect(film).toEqual({ __v: 0, _id: expect.any(String), 'title': 'Alladin', 'studio':  expect.any(String), 'released': 1977, 'cast': [{ '_id': expect.any(String), 'role': 'champ', 'actor': expect.any(String) }] });
+      expect(film).toEqual({ __v: 0, _id: expect.any(String), 'title': 'Alladin', 'studio': expect.any(String), 'released': 1977, 'cast': [{ '_id': expect.any(String), 'role': 'champ', 'actor': expect.any(String) }] });
     });
   });
   const toyStory = {
@@ -82,23 +83,23 @@ describe.skip('films api', () => {
         .expect(200)
         .then(({ body }) => {
           expect(body).toEqual(
-            { 
-              __v: 0, 
-              _id: expect.any(String), 
-              'title': 'Alladin', 
-              'studio':  {
+            {
+              __v: 0,
+              _id: expect.any(String),
+              'title': 'Alladin',
+              'studio': {
                 _id: expect.any(String),
                 name: expect.any(String)
-              }, 
-              'released': 1977, 
+              },
+              'released': 1977,
               'cast': [{
-                '_id': expect.any(String), 
-                'role': 'champ', 
-                'actor': { 
-                  _id: expect.any(String), 
-                  name: expect.any(String) 
-                } 
-              }] 
+                '_id': expect.any(String),
+                'role': 'champ',
+                'actor': {
+                  _id: expect.any(String),
+                  name: expect.any(String)
+                }
+              }]
             });
         });
     });
@@ -116,14 +117,14 @@ describe.skip('films api', () => {
         .then(({ body }) => {
           expect(body[0]).toEqual(
             {
-              __v: 0, 
-              _id: expect.any(String), 
-              'title': 'Alladin', 
-              'studio':  {
+              __v: 0,
+              _id: expect.any(String),
+              'title': 'Alladin',
+              'studio': {
                 _id: expect.any(String),
                 name: expect.any(String)
               },
-              'released': 1977, 
+              'released': 1977,
             },
           );
         });

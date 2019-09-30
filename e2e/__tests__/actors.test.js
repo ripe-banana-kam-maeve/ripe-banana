@@ -4,7 +4,10 @@ const { postFilm } = require('../../e2e/__tests__/films.test');
 
 describe('actors', () => {
   beforeEach(() => {
-    return db.dropCollection('actors');
+    return Promise.all([
+      db.dropCollection('actors'),
+      db.dropCollection('films')
+    ]);
   });
 
   const john = {
@@ -38,10 +41,9 @@ describe('actors', () => {
     });
   });
 
-  it('gets an actor by id', () => {
+  it.only('gets an actor by id', () => {
     return postActor(john).then(actor => {
       return postFilm(toyStory)
-        .expect(200)
         .then(() => {
           return request.get(`/api/actors/${actor._id}`).expect(200);
         })
