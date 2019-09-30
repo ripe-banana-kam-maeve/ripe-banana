@@ -71,26 +71,39 @@ describe.only('films api', () => {
       });
   }
 
-  it.only('posts a film', () => {
+  it('posts a film', () => {
     return postFilm(toyStory).then(film => {
       expect(film).toEqual({ __v: 0, _id: expect.any(String), 'title': 'Alladin', 'studio':  expect.any(String), 'released': 1977, 'cast': [{ '_id': expect.any(String), 'role': 'champ', 'actor': expect.any(String) }] });
     });
   });
 
-  it('gets a film by id', () => {
+  it.only('gets a film by id', () => {
     return postFilm(toyStory).then(film => {
       return request
         .get(`/api/films/${film._id}`)
         .expect(200)
         .then(({ body }) => {
-          expect(body).toMatchInlineSnapshot(
-            {
-              _id: expect.any(String),
-              actors: [expect.any(String)],
-              studio: expect.any(String)
-            },
+          expect(body).toEqual(
+            { 
+              __v: 
+              0, _id: expect.any(String), 
+              'title': 'Alladin', 
+              'studio':  {
+                _id: expect.any(String),
+                name: expect.any(String)
+              }, 
+              'released': 1977, 
+              'cast': [{
+                '_id': expect.any(String), 
+                'role': 'champ', 
+                'actor': { 
+                  _id: expect.any(String), 
+                  name: expect.any(String) 
+                } 
+              }] });
+            
 
-          );
+  
         });
     });
   });
