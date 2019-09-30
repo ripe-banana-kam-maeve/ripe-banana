@@ -74,4 +74,11 @@ describe('studios', () => {
         });
     });
   });
+
+  it('deletes a studio', () => {
+    return postFilm(toyStory)
+      .then(film => {
+        return request.delete(`api/films/${film}`).expect(200);
+      });
+  });
 });
